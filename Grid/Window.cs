@@ -5,7 +5,7 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace Grid
+namespace CellularAutomata
 {
     public class Window
     {
@@ -36,16 +36,18 @@ namespace Grid
 
         public void InitialiseComponents()
         {
-            grid = new Grid(1000, 1000, 50);
+            grid = new Grid(1000, 1000, 100);
             clock = new Clock();
             delta = 0f;
         }
 
         public void Run()
         {
-            while(renderWindow.IsOpen)
+            PrintInstructions();
+
+            while (renderWindow.IsOpen)
             {
-                Update(1 / 100f);
+                Update(1 / 25f);
                 Draw();
             }
         }
@@ -55,7 +57,7 @@ namespace Grid
             delta = clock.ElapsedTime.AsSeconds();
 
             renderWindow.DispatchEvents();
-            
+
             if (delta > tickTime)
             {
                 grid.Update();
@@ -78,7 +80,7 @@ namespace Grid
         private void renderwindow_MouseMoved(object sender, MouseMoveEventArgs e)
         {
             if (bMouseDragging)
-                grid.SetCell(new Vector2i(e.X, e.Y), CellState.Alive);
+                grid.SetCell(new Vector2i(e.X, e.Y), 1);
         }
 
         private void renderwindow_MouseWheelScrolled(object sender, MouseWheelScrollEventArgs e)
@@ -94,7 +96,7 @@ namespace Grid
         private void renderwindow_MouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
             bMouseDragging = true;
-            grid.SetCell(new Vector2i(e.X, e.Y), CellState.Alive);
+            grid.SetCell(new Vector2i(e.X, e.Y), 1);
         }
 
         private void renderwindow_KeyReleased(object sender, KeyEventArgs e)
@@ -104,7 +106,7 @@ namespace Grid
 
         private void renderwindow_KeyPressed(object sender, KeyEventArgs e)
         {
-            switch(e.Code)
+            switch (e.Code)
             {
                 case Keyboard.Key.Escape:
                     renderWindow.Close();
@@ -119,7 +121,20 @@ namespace Grid
                     grid.Reset();
                     grid.FillRandom(0.3);
                     break;
+                case Keyboard.Key.Right:
+                    Rule.ChangeRule();
+                    break;
             }
+        }
+
+        private void PrintInstructions()
+        {
+            Console.WriteLine("Cellular Automata Examples\n\nInstructions:\n\n" + "Mouse:\n\tClick & Drag to set cells to state 1.\n");
+            Console.WriteLine("Keyboard:\n\tTab: Fill grid randomly (30% fill by default)" +
+                "\n\tSpace: Start / Pause evolutions" +
+                "\n\tEnter: Reset Grid" +
+                "\n\tRight-Arrow: Change Rules (Conway's, Brians Brain, WireWorld)" +
+                "\n\tEscape: Quit");
         }
     }
 }

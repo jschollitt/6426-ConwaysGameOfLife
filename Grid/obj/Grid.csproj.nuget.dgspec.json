@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jscho\\OneDrive - Unitec NZ\\_ISCG6426\\SFML prototypes\\SFML_Camera\\Grid\\Grid.csproj": {}
+    "C:\\Users\\jscho\\OneDrive - Unitec NZ\\Documents\\GitHub\\6426-ConwaysGameOfLife\\Grid\\Grid.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jscho\\OneDrive - Unitec NZ\\_ISCG6426\\SFML prototypes\\SFML_Camera\\Grid\\Grid.csproj": {
+    "C:\\Users\\jscho\\OneDrive - Unitec NZ\\Documents\\GitHub\\6426-ConwaysGameOfLife\\Grid\\Grid.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jscho\\OneDrive - Unitec NZ\\_ISCG6426\\SFML prototypes\\SFML_Camera\\Grid\\Grid.csproj",
+        "projectUniqueName": "C:\\Users\\jscho\\OneDrive - Unitec NZ\\Documents\\GitHub\\6426-ConwaysGameOfLife\\Grid\\Grid.csproj",
         "projectName": "Grid",
-        "projectPath": "C:\\Users\\jscho\\OneDrive - Unitec NZ\\_ISCG6426\\SFML prototypes\\SFML_Camera\\Grid\\Grid.csproj",
+        "projectPath": "C:\\Users\\jscho\\OneDrive - Unitec NZ\\Documents\\GitHub\\6426-ConwaysGameOfLife\\Grid\\Grid.csproj",
         "packagesPath": "C:\\Users\\jscho\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jscho\\OneDrive - Unitec NZ\\_ISCG6426\\SFML prototypes\\SFML_Camera\\Grid\\obj\\",
+        "outputPath": "C:\\Users\\jscho\\OneDrive - Unitec NZ\\Documents\\GitHub\\6426-ConwaysGameOfLife\\Grid\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

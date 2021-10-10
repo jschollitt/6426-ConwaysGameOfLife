@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Grid
+namespace CellularAutomata
 {
     class Program
     {

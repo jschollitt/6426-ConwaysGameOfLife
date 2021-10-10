@@ -4,36 +4,30 @@ using System.Text;
 using SFML.System;
 using SFML.Graphics;
 
-namespace Grid
+namespace CellularAutomata
 {
-    public enum CellState
-    {
-        Alive,
-        Dead
-    }
-
     public class CellShape
     {
         public RectangleShape Shape;
-        public Color AliveColour = Color.White;
-        public Color DeadColour = Color.Black;
+        public Color StateOneColour = Color.White;
+        public Color StateTwoColour = Color.Black;
 
         public CellShape(float Width, float Height)
         {
             Shape = new RectangleShape(new Vector2f(Width, Height));
-            Shape.OutlineColor = Color.White;
-            Shape.OutlineThickness = 1;
+            //Shape.OutlineColor = Color.White;
+            //Shape.OutlineThickness = 1;
         }
-        public void Draw(RenderTarget target, float X, float Y, CellState state)
+        public void Draw(RenderTarget target, float X, float Y, Color colour)
         {
             Shape.Position = new Vector2f(X * Shape.Size.X, Y * Shape.Size.Y);
-            Shape.FillColor = state == CellState.Alive ? AliveColour : DeadColour;
+            Shape.FillColor = colour;
             target.Draw(Shape);
         }
     }
     public class Grid
     {
-        CellState[,] cells, buffer;
+        int[,] cells, buffer;
         CellShape cellShape;
 
         bool bRun = false;
@@ -53,16 +47,16 @@ namespace Grid
 
         protected void Initialise()
         {
-            cells = new CellState[_cellsPerRow, _cellsPerRow];
-            buffer = new CellState[_cellsPerRow, _cellsPerRow];
+            cells = new int[_cellsPerRow, _cellsPerRow];
+            buffer = new int[_cellsPerRow, _cellsPerRow];
             cellShape = new CellShape(_width / _cellsPerRow, _height / _cellsPerRow);
-            
+
 
             for (int y = 0; y < _cellsPerRow; y++)
             {
                 for (int x = 0; x < _cellsPerRow; x++)
                 {
-                    cells[x, y] = CellState.Dead;
+                    cells[x, y] = 0;
                 }
             }
         }
@@ -72,21 +66,21 @@ namespace Grid
             if (!bRun) return;
 
             // copy grid state to buffer
-            buffer = (CellState[,])cells.Clone();
+            buffer = (int[,])cells.Clone();
 
             // conway rules
             for (int y = 0; y < _cellsPerRow; y++)
             {
                 for (int x = 0; x < _cellsPerRow; x++)
                 {
-                    ConwayCheck(x, y);
+                    buffer[x, y] = Rule.UpdateState(cells, x, y);
                 }
                 //Console.WriteLine("");
             }
             //Console.WriteLine("");
 
             // write buffer back to grid state
-            cells = (CellState[,])buffer.Clone();
+            cells = (int[,])buffer.Clone();
         }
 
         public void Draw(RenderTarget target)
@@ -95,47 +89,8 @@ namespace Grid
             {
                 for (int x = 0; x < cells.GetLength(0); x++)
                 {
-                    cellShape.Draw(target, x, y, cells[x, y]);
+                    cellShape.Draw(target, x, y, Rule.GetStateColour(cells[x, y]));
                 }
-            }
-        }
-
-        protected void ConwayCheck(int x, int y)
-        {
-            int aliveNeighbours = 0;
-
-            // check neighbouring cells for life state
-            for (int j = y - 1; j <= y + 1; j++)
-            {
-                for (int i = x - 1; i <= x + 1; i++)
-                {
-                    if (i < 0 || i >= cells.GetLength(0) || j < 0 || j >= cells.GetLength(0))
-                    { }
-                    else if (i == x && j == y)
-                    { }
-                    else if (cells[i, j] == CellState.Alive)
-                        aliveNeighbours++;
-
-                }
-            }
-            //Console.Write($"{aliveNeighbours},");
-            //Console.WriteLine($"Cell[{x},{y}]. Neighbours: {aliveNeighbours}");
-
-            // apply changes based on neighbour count
-            if (cells[x, y] == CellState.Alive)
-            {
-                // 0, 1 = lonely = die
-                // > 3 = overcrowded = die
-                // 2, 3 = stay living
-                if (aliveNeighbours < 2 || aliveNeighbours > 3)
-                    buffer[x, y] = CellState.Dead;
-            }
-            else
-            {
-                // 3 = new life
-                // < 3 or > 3 = no change
-                if (aliveNeighbours == 3)
-                    buffer[x, y] = CellState.Alive;
             }
         }
 
@@ -157,13 +112,15 @@ namespace Grid
             {
                 for (int x = 0; x < cells.GetLength(0); x++)
                 {
-                    cells[x, y] = random.NextDouble() < fillRate ? CellState.Alive : CellState.Dead;
+                    cells[x, y] = random.NextDouble() < fillRate ? 1 : 0;
                 }
             }
         }
-        public void SetCell(Vector2i hit, CellState newState)
+        public void SetCell(Vector2i hit, int newState)
         {
             Vector2i hitCell = HitToCell(hit);
+            if (hitCell.X >= cells.GetLength(0) || hitCell.Y >= cells.GetLength(1))
+                return;
             cells[hitCell.X, hitCell.Y] = newState;
         }
 
